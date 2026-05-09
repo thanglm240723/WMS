@@ -1,0 +1,296 @@
+import { lazy, Suspense } from "react"
+import URL from "../constants/url"
+import { DASHBOARD_LAYOUT, NONE_LAYOUT } from "../constants/layout"
+import { Navigate, Route, Routes } from "react-router-dom"
+import DashboardLayout from "../layouts/DashboardLayout"
+import PrivateLayout from "../layouts/PrivateLayout"
+
+
+
+const Login = lazy(() => import("../app/pages/login"))
+const DashboardAdmin = lazy(() => import("../app/pages/dashboard/DashboardAdmin"))
+const ManageUser = lazy(() => import("../app/pages/manageUser"))
+const DashboardManage = lazy(() => import("../app/pages/dashboard/DashboardManage"))
+const ManageCategory = lazy(() => import("../app/pages/manageCategory"))
+const ManageProduct = lazy(() => import("../app/pages/manageProduct"))
+const ManageUnit = lazy(() => import("../app/pages/manageUnit"))
+const ManageUnitConversion = lazy(() => import("../app/pages/manageUnitConversion"))
+const InboundRequest = lazy(() => import("../app/pages/purchase"))
+const ViewInboundRequest = lazy(() => import("../app/pages/purchase/view"))
+const EditInboundRequest = lazy(() => import("../app/pages/purchase/edit"))
+const OutboundRequest = lazy(() => import("../app/pages/sale"))
+const ViewOutboundRequest = lazy(() => import("../app/pages/sale/view"))
+const EditOutboundRequest = lazy(() => import("../app/pages/sale/edit"))
+const ManageOrder = lazy(() => import("../app/pages/dashboard/manageOrder"))
+const ManageOutbound = lazy(() => import("../app/pages/dashboard/manageOutbound"))
+const ManageInventory = lazy(() => import("../app/pages/manageInventory"))
+const ManageWarehouse = lazy(() => import("../app/pages/manageWarehouse"))
+const Profile = lazy(() => import("../app/pages/profile"))
+const ChangePassword = lazy(() => import("../app/pages/profile/changePassword"))
+const ManageBin = lazy(() => import("../app/pages/managerBin"));
+const TransferBin = lazy(() => import("../app/pages/tranferbin"));
+const TransferRequest = lazy(() => import("../app/pages/transfer"))
+const ViewTransferRequest = lazy(() => import("../app/pages/transfer/view"))
+const EditTransferRequest = lazy(() => import("../app/pages/transfer/edit"))
+const ManageStockCount = lazy(() => import("../app/pages/manageStockCount"));
+const ViewBin = lazy(() => import("../app/pages/managerBin/view"));
+
+const shareResourceItem = [
+    {
+        key: URL.Login,
+        element: <Login />,
+        layout: NONE_LAYOUT,
+        private: false,
+    }
+]
+const privateResourceItem = [
+    {
+        key: URL.DashboardAdmin,
+        element: <DashboardAdmin />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageUser,
+        element: <ManageUser />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.DashboardManage,
+        element: <DashboardManage />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageCategory,
+        element: <ManageCategory />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageProduct,
+        element: <ManageProduct />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageUnit,
+        element: <ManageUnit />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageUnitConversion,
+        element: <ManageUnitConversion />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageWarehouse,
+        element: <ManageWarehouse />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.EditInboundRequest,
+        element: <EditInboundRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageInventory,
+        element: <ManageInventory />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.Profile,
+        element: <Profile />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ChangePassword,
+        element: <ChangePassword />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+]
+
+const manageResourceItem = [
+    {
+        key: URL.ManageOrder,
+        element: <ManageOrder />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageOutbound,
+        element: <ManageOutbound />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageWarehouse,
+        element: <ManageWarehouse />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.EditInboundRequest,
+        element: <EditInboundRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageInventory,
+        element: <ManageInventory />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.Profile,
+        element: <Profile />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ChangePassword,
+        element: <ChangePassword />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageBin,
+        element: <ManageBin />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.TransferBin,
+        element: <TransferBin />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    // ── Cross-warehouse transfer (Manager duyệt phiếu) ──────────────────
+    {
+        key: URL.TransferRequest,
+        element: <TransferRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ViewTransferRequest,
+        element: <ViewTransferRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.EditTransferRequest,
+        element: <EditTransferRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ManageStockCount,
+        element: <ManageStockCount />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ViewBin,
+        element: <ViewBin />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+
+]
+
+
+
+const purchaseResourceItem = [
+    {
+        key: URL.InboundRequest,
+        element: <InboundRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ViewInboundRequest,
+        element: <ViewInboundRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+]
+
+const saleResourceItem = [
+    {
+        key: URL.OutboundRequest,
+        element: <OutboundRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ViewOutboundRequest,
+        element: <ViewOutboundRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.EditOutboundRequest,
+        element: <EditOutboundRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+]
+
+
+const transferResourceItem = [
+    {
+        key: URL.TransferRequest,
+        element: <TransferRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.ViewTransferRequest,
+        element: <ViewTransferRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+    {
+        key: URL.EditTransferRequest,
+        element: <EditTransferRequest />,
+        layout: DASHBOARD_LAYOUT,
+        private: true,
+    },
+]
+
+
+const menus = [...shareResourceItem,
+...privateResourceItem,
+...manageResourceItem,
+...purchaseResourceItem,
+...saleResourceItem,
+...transferResourceItem]
+
+export default function Routers() {
+    return (
+        <Routes>
+            <Route path="/" element={<Navigate to={URL.Login} replace />} />
+            {menus.map((menu: any) => {
+                let element = menu.element;
+                element = <Suspense fallback={null}>{element}</Suspense>;
+                if (menu.private) {
+                    element = <PrivateLayout>{element}</PrivateLayout>;
+                }
+                if (menu.layout === DASHBOARD_LAYOUT) {
+                    return <Route key={menu.key} path={menu.key} element={<DashboardLayout>{element}</DashboardLayout>} />;
+                }
+
+                return <Route key={menu.key} path={menu.key} element={element} />
+            })}
+        </Routes>
+    )
+}

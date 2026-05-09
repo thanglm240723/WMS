@@ -1,0 +1,101 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
+using System.Text;
+using warehouseManagement.Filters;
+using warehouseManagement.Mappers;
+using warehouseManagement.Models;
+using warehouseManagement.Repositories;
+using warehouseManagement.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<WmsContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyCnn")));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+       
+        policy.WithOrigins("http://localhost:5173")
+
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); 
+    });
+});
+builder.Services.AddAutoMapper(cfg => { }, typeof(UserProfile).Assembly);
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUnitConversionService, UnitConversionService>();
+builder.Services.AddScoped<IBinRepository, BinRepository>();
+builder.Services.AddScoped<IBinService, BinService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IStockTransferRepository, StockTransferRepository>();
+builder.Services.AddScoped<ICrossWarehouseTransferService, CrossWarehouseTransferService>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+    };
+});
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "WarehouseManagement API",
+        Version = "v1",
+        Description = "API Authentication with JWT for WarehouseManagement"
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Nhập token ở dạng: Bearer {token}"
+    });
+
+    
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+    c.OperationFilter<AuthorizeCheckOperationFilter>();
+});
+
+var app = builder.Build();
+app.UseCors("AllowAll");
+app.UseAuthentication();
+app.UseAuthorization();
+//app.UseHttpsRedirection();
+app.MapControllers();
+app.UseSwagger();
+app.UseSwaggerUI();
+app.Run();
