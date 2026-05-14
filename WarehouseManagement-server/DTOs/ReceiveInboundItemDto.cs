@@ -15,7 +15,7 @@
 
     public class BinQuantityDto
     {
-        public string StoragePosition { get; set; } = null!;
+        public int BinId { get; set; }
         public decimal Quantity { get; set; }
     }
 }

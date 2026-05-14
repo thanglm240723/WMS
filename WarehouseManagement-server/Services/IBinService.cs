@@ -11,3 +11,10 @@ namespace warehouseManagement.Services
         Task Delete(int userId, int binId);
     }
 }
+
+
+
+
+
+
+ 
